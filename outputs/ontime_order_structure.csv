@@ -1,0 +1,4 @@
+structure,order_count,bad_orders,bad_rate_pct
+multi_item_multi_seller,1236,583,47.17
+multi_item_single_seller,7728,1622,20.99
+single_item_single_seller,79982,6022,7.53

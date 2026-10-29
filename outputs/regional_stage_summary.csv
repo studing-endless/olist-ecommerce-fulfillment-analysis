@@ -1,0 +1,7 @@
+period,customer_state,order_count,avg_pre_carrier_days,avg_transit_days
+01_before,RJ,1245,3.35,9.66
+01_before,SP,3298,3.17,5.18
+02_high,RJ,4351,3.74,17.7
+02_high,SP,13771,3.62,6.93
+03_after,RJ,2318,2.76,10.04
+03_after,SP,8853,2.69,4.64

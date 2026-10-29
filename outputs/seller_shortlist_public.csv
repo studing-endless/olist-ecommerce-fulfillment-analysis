@@ -1,0 +1,10 @@
+seller_label,order_count_overall,issue_orders,issue_rate_pct,late_handoff_rate_pct,bad_review_rate_pct,issue_amount
+Candidate_01,1673,343,20.5,9.04,16.95,48178.65
+Candidate_02,963,266,27.62,29.91,25.24,73678.69
+Candidate_03,1364,219,16.06,10.92,12.78,27359.99
+Candidate_04,1116,200,17.92,7.83,13.87,10299.35
+Candidate_05,879,168,19.11,18.32,15.94,34918.62
+Candidate_06,185,94,50.81,32.43,48.07,20024.1
+Candidate_07,227,76,33.48,51.56,28.18,12892.8
+Candidate_08,106,65,61.32,51.89,60.0,9760.05
+Candidate_09,203,56,27.59,4.93,25.87,3501.72
