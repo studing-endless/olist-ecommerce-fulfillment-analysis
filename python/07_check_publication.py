@@ -8,6 +8,8 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 SAFE_CSV = {
+    'seller_strategy_comparison.csv', 'seller_strategy_audit.csv',
+    'seller_strategy_overlap.csv',
     '01_order_status_distribution.csv', '02_state_delivery_summary.csv',
     'review_summary.csv', 'delay_group_summary.csv', 'handoff_summary.csv',
     'seller_shortlist_public.csv', 'platform_summary.csv',

@@ -1,0 +1,17 @@
+strategy_left,strategy_right,intersection_sellers,union_sellers,jaccard_pct
+A,A,9,9,100.0
+A,B,4,14,28.57
+A,C,5,13,38.46
+A,D,4,14,28.57
+B,A,4,14,28.57
+B,B,9,9,100.0
+B,C,1,17,5.88
+B,D,8,10,80.0
+C,A,5,13,38.46
+C,B,1,17,5.88
+C,C,9,9,100.0
+C,D,1,17,5.88
+D,A,4,14,28.57
+D,B,8,10,80.0
+D,C,1,17,5.88
+D,D,9,9,100.0

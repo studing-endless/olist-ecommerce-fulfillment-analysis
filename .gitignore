@@ -40,3 +40,8 @@ report_media/
 !outputs/regional_stage_summary.csv
 !outputs/ontime_order_structure.csv
 !outputs/two_item_review_summary.csv
+
+# Reviewed seller-policy aggregates; never seller/order-level exports.
+!outputs/seller_strategy_comparison.csv
+!outputs/seller_strategy_audit.csv
+!outputs/seller_strategy_overlap.csv
