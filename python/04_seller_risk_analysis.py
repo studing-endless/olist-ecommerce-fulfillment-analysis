@@ -1,4 +1,6 @@
 from project_paths import TABLES, FIGURES
+from analysis_checks import check_seller_profile, reference_enabled, shortlist_union
+from reference_checks import verify_sellers, verify_selection, verify_sensitivity
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -19,19 +21,9 @@ print(df.isna().sum())
 # 2. 核对SQL统计结果
 # ===================================
 
-checks = {
-    "order_count": 95195,
-    "late_orders": 6521,
-    "reviewed_orders": 94051,
-    "bad_review_orders": 11597
-}
-
-assert len(df) == 2948
-assert df["seller_id"].is_unique
-
-for column, expected in checks.items():
-    actual = df[column].sum()
-    assert actual == expected, f"{column} 核验失败：{actual}"
+check_seller_profile(df)
+if reference_enabled():
+    verify_sellers(df)
 
 assert (
     df["late_bad_orders"] + df["ontime_bad_orders"]
@@ -212,9 +204,9 @@ volume_top = priority.nlargest(5, "issue_orders")
 rate_top = priority.nlargest(5, "issue_rate_pct")
 
 # 3. 合并两份名单，去掉重复卖家
-shortlist = pd.concat([volume_top, rate_top])
-
-shortlist = shortlist.drop_duplicates(subset="seller_id")
+shortlist = shortlist_union(priority)
+if reference_enabled():
+    verify_selection(focus, priority, shortlist)
 
 # 4. 按问题订单数量排序
 shortlist = shortlist.sort_values(
@@ -284,6 +276,8 @@ for min_orders in [50, 100, 150]:
 
 # 第四步：与原先100笔方案比较
 baseline = results[100]["ids"]
+if reference_enabled():
+    verify_sensitivity(results)
 
 print("\n===== 不同订单门槛的敏感性分析 =====")
 
