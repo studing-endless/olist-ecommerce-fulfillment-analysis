@@ -27,7 +27,7 @@ CREATE TABLE olist_orders (
 
 -- 管理员需提前启用 local_infile；客户端连接也需显式允许 LOCAL。
 
--- 清空表的内容
+-- 仅在新建空表中首次导入
 
 
 
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `olist_customers` (
     `customer_zip_code_prefix` VARCHAR(5),
     `customer_city` VARCHAR(255),
     `customer_state` VARCHAR(10)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `olist_order_items` (
     `order_id` VARCHAR(32),
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `olist_order_items` (
     `shipping_limit_date` DATETIME,
     `price` DECIMAL(12,2),
     `freight_value` DECIMAL(12,2)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `olist_order_payments` (
     `order_id` VARCHAR(32),
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `olist_order_payments` (
     `payment_type` VARCHAR(50),
     `payment_installments` INT,
     `payment_value` DECIMAL(12,2)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `olist_order_reviews` (
     `review_id` VARCHAR(32),
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `olist_order_reviews` (
     `review_comment_message` TEXT,
     `review_creation_date` DATETIME,
     `review_answer_timestamp` DATETIME
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `olist_products` (
     `product_id` VARCHAR(32),
@@ -120,19 +120,19 @@ CREATE TABLE IF NOT EXISTS `olist_products` (
     `product_length_cm` DECIMAL(12,2),
     `product_height_cm` DECIMAL(12,2),
     `product_width_cm` DECIMAL(12,2)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `olist_sellers` (
     `seller_id` VARCHAR(32),
     `seller_zip_code_prefix` VARCHAR(5),
     `seller_city` VARCHAR(255),
     `seller_state` VARCHAR(10)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `product_category_name_translation` (
     `product_category_name` VARCHAR(255),
     `product_category_name_english` VARCHAR(255)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `olist_geolocation` (
     `geolocation_zip_code_prefix` VARCHAR(5),
@@ -140,10 +140,10 @@ CREATE TABLE IF NOT EXISTS `olist_geolocation` (
     `geolocation_lng` DOUBLE,
     `geolocation_city` VARCHAR(255),
     `geolocation_state` VARCHAR(10)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB;
 
 -- ========================================
--- 二、导入（逐表重置后写入；不是追加）
+-- 二、首次导入其余八张表（不可重复执行）
 -- 执行中 geolocation ~100万行，耗时可能明显长于其他表。
 -- ========================================
 

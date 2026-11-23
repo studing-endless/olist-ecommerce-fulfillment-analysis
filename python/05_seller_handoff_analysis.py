@@ -1,6 +1,8 @@
 from project_paths import TABLES, FIGURES
 
 import pandas as pd
+from analysis_checks import reference_enabled, require
+from reference_checks import verify_handoff, verify_amount
 
 # 1. 读取两份数据
 shortlist = pd.read_csv(
@@ -16,10 +18,11 @@ print("交运超期订单数：", handoff["late_handoff_orders"].sum())
 print("最终延迟订单数：", handoff["late_delivery_orders"].sum())
 
 assert handoff["seller_id"].is_unique
-assert handoff["order_count"].sum() == 95029
-assert handoff["late_handoff_orders"].sum() == 8655
-assert handoff["late_delivery_orders"].sum() == 6518
-assert handoff["ontime_handoff_late_delivery"].sum() == 4706
+for column in ["late_handoff_orders", "late_delivery_orders", "ontime_handoff_late_delivery"]:
+    require(handoff[column].notna().all() and handoff[column].between(0, handoff.order_count).all(), "交运计数超出分母")
+require((handoff.ontime_handoff_late_delivery <= handoff.late_delivery_orders).all(), "交运交叉计数不一致")
+if reference_enabled():
+    verify_handoff(handoff)
 
 # 3. 将9名候选卖家与交运数据关联
 result = shortlist.merge(
@@ -61,9 +64,8 @@ amount = pd.read_csv(
 
 # 2. 核对数据
 assert amount["seller_id"].is_unique
-assert amount["order_count"].sum() == 95195
-assert amount["issue_orders"].sum() == 14165
-assert round(amount["issue_amount"].sum(), 2) == 2564540.84
+require(amount.issue_orders.between(0, amount.order_count).all(), "问题订单数超出分母")
+require(amount.issue_amount.between(0, amount.total_amount).all(), "问题金额超出总额")
 
 print("\n交易金额数据核验通过！")
 
@@ -75,7 +77,9 @@ final = result.merge(
     validate="one_to_one"
 )
 
-assert len(final) == 9
+require(len(final) == len(shortlist), "合并改变了短名单人数")
+if reference_enabled():
+    verify_amount(amount, final)
 assert final["issue_amount"].notna().all()
 
 # 4. 查看最终分析结果

@@ -10,8 +10,7 @@ from pathlib import Path
 df = pd.read_csv(TABLES / "order_review_analysis.csv")
 
 print("数据形状（行数、列数）：", df.shape)
-print("\n前3行数据：")
-print(df.head(3).to_string(index=False))
+# 订单级字段仅保存在本地中间表，不在日志展示。
 
 
 # ==============================
@@ -94,7 +93,7 @@ for bar, rate, n in zip(
         ha="center"
     )
 
-ax.set_title("Delivery Delay and Customer Bad Reviews (n=95,299)")
+ax.set_title(f"Delivery Delay and Customer Bad Reviews (n={len(df):,})")
 ax.set_xlabel("Delivery Delay Group")
 ax.set_ylabel("Bad Review Rate (%)")
 ax.set_ylim(0, 100)
@@ -119,4 +118,4 @@ plt.savefig(
 
 plt.close(fig)
 
-print("\n图表保存成功：outputs/figures/review_rate_by_delay.png")
+print("\n图表保存成功：", output_dir / "review_rate_by_delay.png")

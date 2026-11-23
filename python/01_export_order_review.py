@@ -8,6 +8,8 @@ import pandas as pd
 import os
 import pymysql
 from project_paths import TABLES
+from analysis_checks import check_review_orders, reference_enabled
+from reference_checks import verify_review
 
 
 # ==========================================
@@ -65,6 +67,10 @@ finally:
 # 4. 核验读取的数据
 # ==========================================
 
+check_review_orders(df)
+if reference_enabled():
+    verify_review(df)
+
 total_orders = len(df)
 unique_orders = df["order_id"].nunique()
 late_orders = int(df["is_late"].sum())
@@ -78,12 +84,7 @@ print("延迟订单数：", late_orders)
 print("差评订单数：", bad_review_orders)
 print("缺失评分数：", missing_scores)
 
-# 与此前SQL结果核对
-assert total_orders == 95299
-assert unique_orders == 95299
-assert late_orders == 6353
-assert bad_review_orders == 12189
-assert missing_scores == 0
+# 固定版本计数由显式启用的 reference_checks 核对。
 
 
 # ==========================================

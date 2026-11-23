@@ -68,7 +68,18 @@ class TemporalPolicyTests(unittest.TestCase):
                 late=int(n<(30 if high else 5)); bad=int((10<=n<30) if high else (3<=n<8))
                 rows.append({"seller_id":f"synthetic_{seller:02d}","order_id":f"synthetic_order_{seller}_{n}","is_late":late,"is_reviewed":1,"is_bad":bad,"is_issue":int(late or bad)})
         history=pd.DataFrame(rows)
+        # Ineligible sellers must not enter any strategy despite extreme rates.
+        small = history[history.seller_id == 'synthetic_00'].iloc[:99].copy()
+        small['seller_id'] = 'synthetic_small'
+        no_reviews = history[history.seller_id == 'synthetic_00'].copy()
+        no_reviews['seller_id'] = 'synthetic_no_review'
+        no_reviews['is_reviewed'] = 0
+        no_reviews['is_bad'] = 0
+        no_reviews['is_issue'] = no_reviews.is_late
+        history = pd.concat([history, small, no_reviews], ignore_index=True)
         selected,eligible,audit=m.choose_strategies(history)
+        self.assertNotIn('synthetic_small', eligible.index)
+        self.assertNotIn('synthetic_no_review', eligible.index)
         k=audit["investigation_budget_k"]
         self.assertTrue(k>0)
         self.assertEqual({len(v) for v in selected.values()},{k})

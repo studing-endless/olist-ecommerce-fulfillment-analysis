@@ -1,4 +1,6 @@
-from project_paths import TABLES, FIGURES
+from project_paths import TABLES
+from analysis_checks import check_review_orders, reference_enabled, require
+from reference_checks import verify_review, verify_statistics
 
 import pandas as pd
 import numpy as np
@@ -9,8 +11,9 @@ from statsmodels.stats.proportion import confint_proportions_2indep
 # 1. 读取订单明细
 df = pd.read_csv(TABLES / "order_review_analysis.csv")
 
-assert len(df) == 95299
-assert df["order_id"].is_unique
+check_review_orders(df)
+if reference_enabled():
+    verify_review(df)
 
 required = [
     "is_late", "is_bad_review", "customer_state",
@@ -23,13 +26,15 @@ summary = df.groupby("is_late")["is_bad_review"].agg(
     total="size",
     bad="sum"
 )
+require(set(summary.index) == {0, 1}, "统计比较需要同时存在延迟组和准时组")
 #取行索引为1、列名为 total 的那个数。
 n1 = int(summary.loc[1, "total"]) 
 a = int(summary.loc[1, "bad"])
 n0 = int(summary.loc[0, "total"])
 c = int(summary.loc[0, "bad"])
 
-assert (n1, a, n0, c) == (6353, 3962, 88946, 8227)
+require(n1 + n0 == len(df), "分组计数与样本量不一致")
+require(n1 > 0 and n0 > 0 and c > 0, "RD/RR需要两组订单及非零准时差评数")
 
 p1 = a / n1  #延迟订单差评数 ÷ 延迟订单总数。
 p0 = c / n0  #准时订单差评数 ÷ 准时订单总数
@@ -96,3 +101,5 @@ print("已调整：客户所在州、下单月份")
 print(f"延迟订单调整后 OR：{adjusted_or:.2f}")
 print(f"OR 95%CI：[{or_low:.2f}, {or_high:.2f}]")
 print(f"P值：{p_value:.4g}")
+if reference_enabled():
+    verify_statistics(rd, rd_ci, rr, rr_ci, adjusted_or, or_low, or_high)

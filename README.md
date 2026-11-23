@@ -64,23 +64,15 @@ RJ 交运后平均耗时由 **9.66 天**增至 **17.70 天**，交运前变化�
 
 ## 如何运行
 
-环境建议：Python 3.9+、MySQL 8+。在仓库根目录运行：
+已验证环境、建库导入、SQL执行、数据导出和测试命令见[数据准备与完整运行顺序](docs/data_setup.md)。使用正式版Python的独立虚拟环境，原始数据与凭据保存在本地。
 
 ```powershell
-python -m pip install -r requirements.txt
-# 先下载九份原始 CSV，并按 docs/data_setup.md 在全新数据库执行 SQL 00—05。
-python python/01_export_order_review.py
-python python/00_export_seller_tables.py
-python python/02_visualize_review_delay.py
-python python/03_review_statistics.py
-python python/04_seller_risk_analysis.py
-python python/05_seller_handoff_analysis.py
-python python/06_plot_public_summaries.py
+python -m unittest discover -s tests -v
 ```
 
-连接数据库时交互输入用户名和密码，或自行设置 `OLIST_DB_*` 环境变量。原始 CSV 自行从 Kaggle 下载；`data/` 和 `outputs/tables/` 均不入库。已有公开汇总表可直接用于最后一步绘图。完整顺序、SQL 导入路径配置及导出依赖见[数据准备](docs/data_setup.md)。
+默认运行会执行 9 项测试，并跳过 4 项需要专用 MySQL 实例的测试。配置好隔离测试库、专用连接凭据及 `OLIST_TEST_DB_NAME` 后，才可执行全部 13 项，配置方法见[数据库测试说明](docs/data_setup.md#时间切分策略与测试)。
 
-原项目发布核验中已复跑 Python 评价图、统计模型、卖家筛选、交运合并，并对照原始 CSV 和已有结果核验关键数字；**未实际运行 MySQL 导入、SQL 分析脚本及数据库导出步骤**。SQL 完成静态检查与已识别执行错误修复，不能等同于数据库端执行成功。详情见[核验记录](docs/validation.md)和[报告核验对照](docs/report_reconciliation.md)。
+固定公开数据版本的额外核验通过 `OLIST_VERIFY_REFERENCE=1` 启用。SQL、Python各步骤的实际执行结果和局限见[质量修复报告](docs/quality_review.md)。首次准备阶段的验证事实见[历史核验记录](docs/validation.md)和[报告核验对照](docs/report_reconciliation.md)。
 
 ## 文件导航
 
