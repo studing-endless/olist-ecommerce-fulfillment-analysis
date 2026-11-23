@@ -72,7 +72,7 @@ python -m unittest discover -s tests -v
 
 默认运行会执行 9 项测试，并跳过 4 项需要专用 MySQL 实例的测试。配置好隔离测试库、专用连接凭据及 `OLIST_TEST_DB_NAME` 后，才可执行全部 13 项，配置方法见[数据库测试说明](docs/data_setup.md#时间切分策略与测试)。
 
-固定公开数据版本的额外核验通过 `OLIST_VERIFY_REFERENCE=1` 启用。SQL、Python各步骤的实际执行结果和局限见[质量修复报告](docs/quality_review.md)。首次准备阶段的验证事实见[历史核验记录](docs/validation.md)和[报告核验对照](docs/report_reconciliation.md)。
+固定公开数据版本的额外核验通过 `OLIST_VERIFY_REFERENCE=1` 启用。SQL、Python各步骤的实际执行结果和局限见[质量修复报告](docs/quality_review.md)。历史验证与当前复现的区别、原报告证据对照也收录在该质量报告中。
 
 ## 文件导航
 
