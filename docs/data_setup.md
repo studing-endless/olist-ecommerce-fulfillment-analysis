@@ -2,7 +2,7 @@
 
 ## 环境与输入
 
-建议使用稳定正式版Python 3.10或3.11及MySQL 8。实际验证版本与执行范围见[质量修复报告](quality_review.md)，历史3.9.0rc2记录见[历史核验](validation.md)。在仓库根目录使用PowerShell运行。
+建议使用稳定正式版Python 3.10或3.11及MySQL 8。实际验证版本与执行范围见[质量修复报告](quality_review.md)，早期3.9.0rc2环境的验证范围见报告中的[历史核验](quality_review.md#历史核验与原报告证据)。在仓库根目录使用PowerShell运行。
 
 ```powershell
 py -3.10 -m venv .venv
